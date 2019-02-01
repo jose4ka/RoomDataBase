@@ -5,18 +5,41 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity(tableName = "numbers")
+@Entity()
 public class Number {
 
-    @PrimaryKey
+    //Самогенерируемый первичный ключ
+    @PrimaryKey(autoGenerate = true)
     public long id;
 
-    @ColumnInfo(name = "name")
+
+    //Конструктор для сощдания нового элемента в БД
+    public Number(String name, String surname, String number){
+        this.name=name;
+        this.surname=surname;
+        this.number=number;
+    }
+
+    //Поля которые играют роль названия колонок в БД
     public String name;
-
-    @ColumnInfo(name = "surname")
     public String surname;
-
-    @ColumnInfo(name = "number")
     public String number;
+
+    //Геттеры для получения данных из нужного экземпляра объекта класса
+    public String getName() {
+        return this.name;
+    }
+
+    public String getSurname() {
+        return this.surname;
+    }
+
+    public String getNumber() {
+        return this.number;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
 }

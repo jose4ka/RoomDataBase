@@ -1,5 +1,6 @@
 package com.example.roomdatabase;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -12,11 +13,23 @@ import java.util.List;
 @Dao
 public interface Dao_Numbers {
 
-    @Query("SELECT * FROM numbers")
+    //Запросы из БД
+
+    //Получить все данные из таблицы
+    @Query("SELECT * FROM Number")
     List<Number> getAll();
 
-    @Query("SELECT * FROM numbers WHERE id= :id")
+    //Получить данные по определённому id
+    @Query("SELECT * FROM Number WHERE id= :id")
     Number getById(long id);
+
+    @Query("SELECT * FROM Number")
+    LiveData<List<Number>> liveGetAll();
+
+    //Очистить всю таблицу
+    @Query("DELETE FROM Number")
+    void deleteAll();
+
 
     @Insert
     void insert(Number number);
@@ -26,4 +39,5 @@ public interface Dao_Numbers {
 
     @Delete
     void delete(Number number);
+
 }
