@@ -1,37 +1,37 @@
 package com.example.roomdatabase;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.DatabaseConfiguration;
 import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.util.AdapterListUpdateCallback;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Adapter_Numbers.CallBackButtons{
 
     //Динамический массив для хранения номеров
-    List<Number> numbers;
-    //Экзеипляр адаптера
-    Adapter_Numbers a_numbers;
+    //Локальный список для подключения его к Recycle View
+     List<Number> numbers;
+
+    //Экземпляр адаптера
+     Adapter_Numbers a_numbers;
 
     //Кнопки на экране
-    Button btnAdd, btnClearAll;
-    EditText et_Name, et_Surname, et_Number;
+     Button btnAdd, btnClearAll;
 
     //Элемент списка на экране
      RecyclerView rv_Numbers;
 
-    //Объект базы данных
-    AppDatabase dataBase;
+    //Созданный нами объект базы данных
+     AppDatabase dataBase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabase.class, "database").allowMainThreadQueries().build();
 
         //Инициализируем лист и список на экране
+        //Эти методы описаны ниже
         initializeList();
         initializeRecycleView();
 
@@ -52,83 +53,88 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                  switch (v.getId()){
                      case R.id.btn_Add:
-                         dataNewNumber();
+                         //Запускаем всплывающее окно для добавления номера
+                         Intent add=new Intent(MainActivity.this, Activity_Dialog_NewNumber.class);
+                         startActivity(add);
                          break;
                      case R.id.btn_ClearAll:
+                         //чищаем таблицу
                          dataClearAll();
                          break;
                  }
             }
         };
 
-
         //Инициализируем элементы на экране
         btnAdd=findViewById(R.id.btn_Add);
         btnAdd.setOnClickListener(oclBtn);
         btnClearAll=findViewById(R.id.btn_ClearAll);
         btnClearAll.setOnClickListener(oclBtn);
-        et_Name=findViewById(R.id.et_Name);
-        et_Surname=findViewById(R.id.et_Surname);
-        et_Number=findViewById(R.id.et_Number);
-
 
     }
 
-
-
-    //Метод добавления нового элемента в список
-    private void dataNewNumber(){
-        //Получаем значения из полей ввода
-            String new_name=et_Name.getText().toString();
-            String new_surname=et_Surname.getText().toString();
-            String new_number=et_Number.getText().toString();
-            //Вставляем в базу данных новый объект с нужными нам значениями
-            dataBase.numberDao().insert(new Number(new_name, new_surname, new_number));
-            //Заполняем список обновленными данными
-            initializeList();
-            //Переинициализируем список для отображения новых данных
-            initializeRecycleView();
-            //Очищаем поля ввода
-            clearFields();
-
-    }
-
-
-    //Метод для полной очистки базы данных и списка
+    //Метод для полной очистки таблицы и списка
     private void dataClearAll(){
+        //Обращаемся к базе данных, берем из неё объект Dao, из Dao ыпоняем
         dataBase.numberDao().deleteAll();
-
         //Заного инициализируем список
         initializeList();
         initializeRecycleView();
-
-        //Очищаем поля ввода
-        clearFields();
     }
 
 
 
     //Метод инициализации списка
-    private void initializeList(){
-        if(dataBase.numberDao().getAll()==null){}
-        else {
+    private  void initializeList(){
+        //Проверяем базу на пустоту
+        if(!(dataBase.numberDao().getAll()==null)){
+            //Присваиваем локальному списку данные базы
             numbers = dataBase.numberDao().getAll();
         }
     }
 
+
     //Метод для инициализации recycle view
-    private void initializeRecycleView(){
+    private  void initializeRecycleView(){
+        //Находим список на экране
         rv_Numbers=findViewById(R.id.rv_Numbers);
-        a_numbers=new Adapter_Numbers(getApplicationContext(), numbers);
+        //Инициализируем адаптер
+        a_numbers=new Adapter_Numbers(getBaseContext(), numbers, this);
+        //Присваиваем списку адаптер
         rv_Numbers.setAdapter(a_numbers);
         rv_Numbers.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
     }
 
-    //Метод для очистки полей воода после добавления элемента в таблицу/очистки таблицы
-    private void clearFields(){
-        et_Name.setText("");
-        et_Surname.setText("");
-        et_Number.setText("");
+
+    //Метод удаления нужного объекта из таблицы, вызывается интерфейсом адаптера
+    @Override
+    public void deleteNumber(Number number) {
+        dataBase.numberDao().delete(number);
+        initializeList();
+        initializeRecycleView();
     }
 
+    @Override
+    public void updateNumber(Number number) {
+
+    }
+
+
+    /*
+    В методах onStart и onResume мы "обновляем"
+    Они активируются после закрытия диалогового окна с добавлением номера
+    Тем самым, после закрытия диалогового окна, мы видим уже обновлённый спискок
+     */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        onResume();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeList();
+        initializeRecycleView();
+    }
 }

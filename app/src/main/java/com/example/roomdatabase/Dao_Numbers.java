@@ -30,6 +30,9 @@ public interface Dao_Numbers {
     @Query("DELETE FROM Number")
     void deleteAll();
 
+    @Query("DELETE FROM Number WHERE id= :id")
+    void deleteByid(int id);
+
 
     @Insert
     void insert(Number number);
@@ -39,5 +42,6 @@ public interface Dao_Numbers {
 
     @Delete
     void delete(Number number);
+
 
 }
