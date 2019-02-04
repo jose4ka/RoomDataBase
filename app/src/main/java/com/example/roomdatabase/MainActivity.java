@@ -118,7 +118,11 @@ public class MainActivity extends AppCompatActivity implements Adapter_Numbers.C
 
     @Override
     public void updateNumber(Number number) {
-
+            /*
+            Обращаемся к диалоговому окну добавления/изменения записи
+            На тот случай, если мы хотим изменить запись, передаём существующие
+            значения записи
+             */
             Intent add=new Intent(MainActivity.this, Activity_Dialog_NewNumber.class);
             add.putExtra("edit", true);
             add.putExtra("id", number.getId());

@@ -33,6 +33,7 @@ public interface Dao_Numbers {
     @Query("DELETE FROM Number WHERE id= :id")
     void deleteByid(int id);
 
+    //Изменить номер по нужным значениям, поиск происходит по id
     @Query("UPDATE Number SET name= :name, surname= :surname, number= :number, image= :image WHERE id= :id")
     void updateByid(String name, String surname, String number, byte[] image, long id);
 

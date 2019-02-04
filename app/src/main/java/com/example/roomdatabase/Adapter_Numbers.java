@@ -62,14 +62,17 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Number number = mData.get(position);
         if(number.getImage()==null){
+            //Устанавливаем просто строковые значения, если не было установлено изображение
             holder.tv_surname.setText(number.getSurname());
             holder.tv_name.setText(number.getName());
             holder.tv_number.setText(number.getNumber());
         }
         else {
+            //Устанавливаем строковые значения
             holder.tv_surname.setText(number.getSurname());
             holder.tv_name.setText(number.getName());
             holder.tv_number.setText(number.getNumber());
+            //Получаем массив изображения, декодируем его, и устанавливаем на фото значка элемента
             byte[] image=number.getImage();
             Bitmap bmp= BitmapFactory.decodeByteArray(image, 0, image.length);
             holder.img_ImageIcon.setImageBitmap(bmp);
@@ -107,6 +110,7 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
                             После этого, мы с помощью интерфейса образаемся к основному классу
                             и удаляем нужный нам элемент
                              */
+                            //Всё это выполняется и на следующих кликах
                             callback.deleteNumber(mData.get(getLayoutPosition()));
                             break;
                         case R.id.btn_Edit:
