@@ -3,6 +3,9 @@ package com.example.roomdatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.util.AdapterListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -23,11 +29,14 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
     private List<Number> mData;
     private LayoutInflater mInflater;
 
+
+
     //Интерфейс для связки этого адаптера и активности
     public interface CallBackButtons{
         //Методы удаления и изменения объекта
         void deleteNumber(Number number);
         void updateNumber(Number number);
+        void callNumber(Number number);
     }
 
     //Объект интерфейса
@@ -52,9 +61,20 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Number number = mData.get(position);
-        holder.tv_surname.setText(number.getSurname());
-        holder.tv_name.setText(number.getName());
-        holder.tv_number.setText(number.getNumber());
+        if(number.getImage()==null){
+            holder.tv_surname.setText(number.getSurname());
+            holder.tv_name.setText(number.getName());
+            holder.tv_number.setText(number.getNumber());
+        }
+        else {
+            holder.tv_surname.setText(number.getSurname());
+            holder.tv_name.setText(number.getName());
+            holder.tv_number.setText(number.getNumber());
+            byte[] image=number.getImage();
+            Bitmap bmp= BitmapFactory.decodeByteArray(image, 0, image.length);
+            holder.img_ImageIcon.setImageBitmap(bmp);
+        }
+
     }
 
     @Override
@@ -64,8 +84,9 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
 
     // Информация об элементах в разметке
     class ViewHolder extends RecyclerView.ViewHolder {
-        Button btn_Delete, btn_Edit;
+        Button btn_Delete, btn_Edit, btn_Call;
         TextView tv_name, tv_surname, tv_number;
+        ImageView img_ImageIcon;
         ViewHolder(final View itemView) {
             super(itemView);
 
@@ -89,7 +110,10 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
                             callback.deleteNumber(mData.get(getLayoutPosition()));
                             break;
                         case R.id.btn_Edit:
-                            callback.updateNumber(mData.get(getLayoutPosition()));
+                                callback.updateNumber(mData.get(getLayoutPosition()));
+                            break;
+                        case R.id.btn_Call:
+                            callback.callNumber(mData.get(getLayoutPosition()));
                             break;
                     }
                 }
@@ -103,6 +127,10 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
             tv_name=itemView.findViewById(R.id.tv_Name);
             tv_number=itemView.findViewById(R.id.tv_Number);
             tv_surname=itemView.findViewById(R.id.tv_Surname);
+            img_ImageIcon=itemView.findViewById(R.id.img_Icon);
+            btn_Call=itemView.findViewById(R.id.btn_Call);
+            btn_Call.setOnClickListener(oclBtn);
+
 
         }
     }

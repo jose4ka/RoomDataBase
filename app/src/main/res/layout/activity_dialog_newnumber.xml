@@ -16,6 +16,28 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Фото"
+                android:textAlignment="center"
+                android:textColor="@color/colorText"
+                android:textSize="18sp"
+                android:layout_margin="2dp"/>
+
+            <ImageButton
+                android:id="@+id/btn_SelectImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#00000000"
+                android:src="@drawable/add_image"
+                android:text="Button" />
+
+            <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

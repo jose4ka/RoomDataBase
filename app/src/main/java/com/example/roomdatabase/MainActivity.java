@@ -2,6 +2,7 @@ package com.example.roomdatabase;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -117,6 +119,16 @@ public class MainActivity extends AppCompatActivity implements Adapter_Numbers.C
     @Override
     public void updateNumber(Number number) {
 
+            Intent add=new Intent(MainActivity.this, Activity_Dialog_NewNumber.class);
+            add.putExtra("edit", true);
+            add.putExtra("id", number.getId());
+            add.putExtra("name", number.getName());
+            add.putExtra("surname", number.getSurname());
+            add.putExtra("number", number.getNumber());
+            add.putExtra("image", number.getImage());
+            startActivity(add);
+
+
     }
 
 
@@ -136,5 +148,12 @@ public class MainActivity extends AppCompatActivity implements Adapter_Numbers.C
         super.onResume();
         initializeList();
         initializeRecycleView();
+    }
+
+    @Override
+    public void callNumber(Number number) {
+        Intent call=new Intent(Intent.ACTION_DIAL);
+        call.setData(Uri.parse("tel:"+number.getNumber()));
+        startActivity(call);
     }
 }

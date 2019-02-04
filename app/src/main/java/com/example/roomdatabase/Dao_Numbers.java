@@ -33,6 +33,8 @@ public interface Dao_Numbers {
     @Query("DELETE FROM Number WHERE id= :id")
     void deleteByid(int id);
 
+    @Query("UPDATE Number SET name= :name, surname= :surname, number= :number, image= :image WHERE id= :id")
+    void updateByid(String name, String surname, String number, byte[] image, long id);
 
     @Insert
     void insert(Number number);
