@@ -123,14 +123,20 @@ public class MainActivity extends AppCompatActivity implements Adapter_Numbers.C
             На тот случай, если мы хотим изменить запись, передаём существующие
             значения записи
              */
-            Intent add=new Intent(MainActivity.this, Activity_Dialog_NewNumber.class);
-            add.putExtra("edit", true);
-            add.putExtra("id", number.getId());
-            add.putExtra("name", number.getName());
-            add.putExtra("surname", number.getSurname());
-            add.putExtra("number", number.getNumber());
-            add.putExtra("image", number.getImage());
-            startActivity(add);
+            try {
+                Intent add=new Intent(MainActivity.this, Activity_Dialog_NewNumber.class);
+                add.putExtra("edit", true);
+                add.putExtra("id", number.getId());
+                add.putExtra("name", number.getName());
+                add.putExtra("surname", number.getSurname());
+                add.putExtra("number", number.getNumber());
+                add.putExtra("image", number.getImage());
+                startActivity(add);
+            }
+            catch (Exception e){
+                Toast.makeText(getApplicationContext(), "ERROR: MAIN ACTIVITY UPDATE METHOD", Toast.LENGTH_SHORT).show();
+            }
+
 
 
     }

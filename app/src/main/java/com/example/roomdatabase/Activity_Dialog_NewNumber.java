@@ -52,7 +52,8 @@ public class Activity_Dialog_NewNumber extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog_newnumber);
 
-        //Присваиваем локальным переменным значения из Extra
+        try {
+            //Присваиваем локальным переменным значения из Extra
             boolean ed=getIntent().getBooleanExtra("edit", false);
             long ed_id=getIntent().getLongExtra("id", 1);
             ed_name=getIntent().getStringExtra("name");
@@ -61,6 +62,11 @@ public class Activity_Dialog_NewNumber extends AppCompatActivity {
             ed_image=getIntent().getByteArrayExtra("image");
             edit=ed;
             id=ed_id;
+        }
+        catch (Exception e){
+            Toast.makeText(getApplicationContext(), "ERROR IN DIALOG INITIALIZE ELEMENTS", Toast.LENGTH_SHORT).show();
+        }
+
 
 
 
@@ -81,7 +87,13 @@ public class Activity_Dialog_NewNumber extends AppCompatActivity {
                         if(edit==false){
                             dataBase.numberDao().insert(new Number(name, surname, number, imageArray)); }
                         else {
-                            dataBase.numberDao().updateByid(name, surname, number, imageArray, id); }
+                            try {
+                                dataBase.numberDao().updateByid(name, surname, number, imageArray, id);
+                            }
+                            catch (Exception e){
+                                Toast.makeText(getApplicationContext(), "ERROR IN DIALOG CONFIRM BUTTON", Toast.LENGTH_SHORT).show();
+                            }
+                             }
                         finish();
                         break;
                     case R.id.btn_Cancel:

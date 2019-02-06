@@ -28,7 +28,7 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
     //Локальный список для адаптера
     private List<Number> mData;
     private LayoutInflater mInflater;
-
+    private Context lContext;
 
 
     //Интерфейс для связки этого адаптера и активности
@@ -47,6 +47,7 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.callback=callback;
+        this.lContext=context;
     }
 
     // Поиск элемента который будет располагаться в списке
@@ -114,7 +115,12 @@ public class Adapter_Numbers extends RecyclerView.Adapter<Adapter_Numbers.ViewHo
                             callback.deleteNumber(mData.get(getLayoutPosition()));
                             break;
                         case R.id.btn_Edit:
+                            try {
                                 callback.updateNumber(mData.get(getLayoutPosition()));
+                            }
+                            catch (Exception e){
+                                Toast.makeText(lContext, "ERROR IN EDIT BUTTON", Toast.LENGTH_SHORT).show();
+                            }
                             break;
                         case R.id.btn_Call:
                             callback.callNumber(mData.get(getLayoutPosition()));
